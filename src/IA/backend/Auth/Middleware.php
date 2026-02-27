@@ -15,7 +15,7 @@ namespace BackendPhp\Auth;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-class AuthMiddleware
+class Middleware
 {
     protected TokenService $tokens;
 

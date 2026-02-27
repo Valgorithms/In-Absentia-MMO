@@ -16,7 +16,7 @@ namespace BackendPhp\Parts;
 use Discord\Parts\Part as DiscordPart;
 use BackendPhp\Support\PartFactory;
 
-final class Contract extends DiscordPart
+final class Contract extends DiscordPart implements \JsonSerializable
 {
     // maintain compatibility with previous local Part API
     protected $fillable = ['id', 'owner', 'started_at', 'resolved_at'];
@@ -55,14 +55,14 @@ final class Contract extends DiscordPart
         $this->original = $this->attributes ?? [];
     }
 
-    public function toArray(): array
+    public function jsonSerialize(): array
     {
         $out = [];
         foreach ($this->getRawAttributes() as $k => $v) {
-            if ($v instanceof \Discord\Parts\Part) {
+            if ($v instanceof DiscordPart) {
                 $out[$k] = $v->jsonSerialize();
             } elseif (is_array($v)) {
-                $out[$k] = array_map(fn ($x) => $x instanceof \Discord\Parts\Part ? $x->jsonSerialize() : $x, $v);
+                $out[$k] = array_map(fn ($x) => $x instanceof DiscordPart ? $x->jsonSerialize() : $x, $v);
             } else {
                 $out[$k] = $v;
             }

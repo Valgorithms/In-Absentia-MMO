@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace BackendPhp\Parts;
 
+use Discord\Discord;
 use Discord\Parts\Part as DiscordPart;
 
-final class Character extends DiscordPart
+final class Character extends DiscordPart implements \JsonSerializable
 {
     // maintain compatibility with previous local Part API
     protected $fillable = ['id', 'created_at', 'updated_at'];
@@ -23,7 +24,7 @@ final class Character extends DiscordPart
 
     public function __construct($discordOrAttributes = [], array $attributes = [], bool $created = false)
     {
-        if ($discordOrAttributes instanceof \Discord\Discord) {
+        if ($discordOrAttributes instanceof Discord) {
             parent::__construct($discordOrAttributes, $attributes, $created);
 
             return;
@@ -54,14 +55,14 @@ final class Character extends DiscordPart
         $this->original = $this->attributes ?? [];
     }
 
-    public function toArray(): array
+    public function jsonSerialize(): array
     {
         $out = [];
         foreach ($this->getRawAttributes() as $k => $v) {
-            if ($v instanceof \Discord\Parts\Part) {
+            if ($v instanceof DiscordPart) {
                 $out[$k] = $v->jsonSerialize();
             } elseif (is_array($v)) {
-                $out[$k] = array_map(fn ($x) => $x instanceof \Discord\Parts\Part ? $x->jsonSerialize() : $x, $v);
+                $out[$k] = array_map(fn ($x) => $x instanceof DiscordPart ? $x->jsonSerialize() : $x, $v);
             } else {
                 $out[$k] = $v;
             }

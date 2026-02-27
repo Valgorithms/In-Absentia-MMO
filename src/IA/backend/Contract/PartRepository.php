@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the LICENSE.md file.
  */
 
-namespace BackendPhp\Contract;
+namespace BackendPhp\Contract\Contract;
 
 use BackendPhp\Support\PartFactory;
 use BackendPhp\Parts\Contract;

@@ -18,14 +18,48 @@ use BackendPhp\Parts\Character;
 
 final class PartFactory
 {
-    protected static $discordFactory = null;
+    protected $discordFactory = null;
 
-    public static function setDiscordFactory($factory): void
+    /** @var null|self Global compatibility instance */
+    protected static ?self $globalInstance = null;
+
+    public function __construct($discordFactory = null)
     {
-        self::$discordFactory = $factory;
+        $this->discordFactory = $discordFactory;
     }
 
+    public function getDiscordFactory()
+    {
+        return $this->discordFactory;
+    }
+
+    /**
+     * Compatibility shim: accept the previous static setter which provided
+     * the Discord factory. This sets a global PartFactory instance used by
+     * existing static call sites.
+     */
+    public static function setDiscordFactory($factory): void
+    {
+        self::$globalInstance = new self($factory);
+    }
+
+    /**
+     * Static facade kept for backwards compatibility. Delegates to the
+     * injectable instance (global if configured) so existing call sites
+     * continue to work.
+     */
     public static function create(string $type, array $attributes = []): object
+    {
+        $instance = self::$globalInstance ?? new self(null);
+
+        return $instance->createInstance($type, $attributes);
+    }
+
+    /**
+     * Instance-based creation method. New code should call this on an
+     * injected `PartFactory` instance.
+     */
+    public function createInstance(string $type, array $attributes = []): object
     {
         $map = [
             'contract' => Contract::class,
@@ -39,11 +73,10 @@ final class PartFactory
 
         // If a Discord factory is registered and the class is a Discord Part,
         // delegate creation to the Discord factory so it gets the Discord client.
-        if (self::$discordFactory !== null) {
+        if ($this->discordFactory !== null) {
             try {
-                // If class is subclass of Discord\Parts\Part or namespaced under Discord\Parts
                 if (is_subclass_of($class, \Discord\Parts\Part::class) || str_starts_with($class, 'Discord\\Parts\\')) {
-                    return self::$discordFactory->part($class, $attributes, false);
+                    return $this->discordFactory->part($class, $attributes, false);
                 }
             } catch (\Throwable $e) {
                 // Fall back to direct instantiation on error
@@ -54,16 +87,12 @@ final class PartFactory
         // create a minimal Discord stub instance to satisfy the constructor typehint
         // so tests and non-discord environments can still instantiate parts.
         if (is_subclass_of($class, \Discord\Parts\Part::class) || str_starts_with($class, 'Discord\\Parts\\')) {
-            // Create instance without invoking DiscordPart constructor to avoid
-            // requiring a full Discord client in tests or non-discord environments.
             $ref = new \ReflectionClass($class);
             $instance = $ref->newInstanceWithoutConstructor();
 
-            // If the PartTrait fill method is available, use it to populate attributes.
             if (method_exists($instance, 'fill')) {
                 $instance->fill($attributes);
             } else {
-                // Fallback: set protected attributes property directly via a bound closure
                 if ($ref->hasProperty('attributes')) {
                     $propName = 'attributes';
                     $setter = function ($val) use ($propName) {
@@ -74,7 +103,6 @@ final class PartFactory
                 }
             }
 
-            // Mark as not created
             if ($ref->hasProperty('created')) {
                 $propName = 'created';
                 $setter = function ($val) use ($propName) {

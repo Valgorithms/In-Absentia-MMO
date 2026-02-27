@@ -43,10 +43,16 @@ final class DiscordServiceProvider extends ServiceProvider
             return new DiscordFactory($discord);
         });
 
+        // register PartFactory as a service (injectable)
+        $container->set('part.factory', function ($c) {
+            return new \BackendPhp\Support\PartFactory($c->get('discord.factory'));
+        });
+
         // Eagerly bind our PartFactory to use the Discord factory so parts created
         // through PartFactory will use the Discord client where appropriate.
         $factory = $container->get('discord.factory');
         if ($factory !== null) {
+            // preserve backwards-compatible static API for now
             \BackendPhp\Support\PartFactory::setDiscordFactory($factory);
         }
     }

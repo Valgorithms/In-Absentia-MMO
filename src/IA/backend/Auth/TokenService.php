@@ -32,8 +32,8 @@ class TokenService
     /**
      * Create a signed JWT.
      *
-     * @param array $payload Claims to include in the token (will be merged with exp/iat)
-     * @param int|null $ttl Seconds until expiry. Null = no exp claim.
+     * @param array    $payload Claims to include in the token (will be merged with exp/iat)
+     * @param int|null $ttl     Seconds until expiry. Null = no exp claim.
      */
     public function createToken(array $payload, ?int $ttl = 3600): string
     {
@@ -55,6 +55,7 @@ class TokenService
     {
         try {
             $decoded = JWT::decode($token, new Key($this->secret, $this->algo));
+
             return json_decode(json_encode($decoded), true);
         } catch (ExpiredException|SignatureInvalidException $e) {
             return null;

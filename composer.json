@@ -25,7 +25,7 @@
     },
     "scripts": {
         "cs": ["./vendor/bin/php-cs-fixer fix"],
-        "unit": ["./vendor/bin/phpunit"]
+        "unit": ["./vendor/bin/pest"]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

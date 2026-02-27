@@ -9,7 +9,9 @@
     ],
     "require": {
         "php": "^8.2.0",
-        "team-reflex/discord-php": "^10.45.22"
+        "team-reflex/discord-php": "^10.45.22",
+        "monolog/monolog": "^3.0",
+        "sharkk/router": "*"
     },
     "require-dev": {
         "symfony/var-dumper": "*",
@@ -34,7 +36,8 @@
     },
     "autoload": {
         "psr-4": {
-            "IA\\": "src/IA/"
+            "IA\\": "src/IA/",
+            "BackendPhp\\": "src/IA/backend/"
         }
     }
 }

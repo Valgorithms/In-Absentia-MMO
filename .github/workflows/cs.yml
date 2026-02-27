@@ -24,3 +24,6 @@ jobs:
 
       - name: Run CS script
         run: composer run-script cs
+
+      - name: Run unit tests
+        run: composer run-script unit

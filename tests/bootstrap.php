@@ -35,15 +35,21 @@ ini_set('display_errors', '1');
         if (method_exists($instance, 'fill')) {
             $instance->fill($data);
         } elseif ($ref->hasProperty('attributes')) {
-            $prop = $ref->getProperty('attributes');
-            $prop->setAccessible(true);
-            $prop->setValue($instance, $data);
+            $propName = 'attributes';
+            $setter = function ($val) use ($propName) {
+                $this->$propName = $val;
+            };
+            $setter = \Closure::bind($setter, $instance, $class);
+            $setter($data);
         }
 
         if ($ref->hasProperty('created')) {
-            $prop = $ref->getProperty('created');
-            $prop->setAccessible(true);
-            $prop->setValue($instance, $created);
+            $propName = 'created';
+            $setter = function ($val) use ($propName) {
+                $this->$propName = $val;
+            };
+            $setter = \Closure::bind($setter, $instance, $class);
+            $setter($created);
         }
 
         return $instance;

@@ -25,7 +25,7 @@ class Container
     public function get(string $id)
     {
         if (! array_key_exists($id, $this->items)) {
-            throw new \RuntimeException("Service '{$id}' not found in container");
+            return null;
         }
 
         $val = $this->items[$id];

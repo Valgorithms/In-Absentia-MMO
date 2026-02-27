@@ -86,7 +86,7 @@ final class Contract extends DiscordPart implements \JsonSerializable
     {
         if (is_string($value)) {
             try {
-                $this->attributes['started_at'] = new \DateTimeImmutable($value);
+                $this->attributes['started_at'] = new \Carbon\Carbon($value);
 
                 return;
             } catch (\Throwable $e) {
@@ -101,7 +101,7 @@ final class Contract extends DiscordPart implements \JsonSerializable
     {
         if (is_string($value)) {
             try {
-                $this->attributes['resolved_at'] = new \DateTimeImmutable($value);
+                $this->attributes['resolved_at'] = new \Carbon\Carbon($value);
 
                 return;
             } catch (\Throwable $e) {

@@ -85,7 +85,7 @@ final class Character extends DiscordPart implements \JsonSerializable
     {
         if (is_string($value)) {
             try {
-                $this->attributes['created_at'] = new \DateTimeImmutable($value);
+                $this->attributes['created_at'] = new \Carbon\Carbon($value);
 
                 return;
             } catch (\Throwable $e) {
@@ -100,7 +100,7 @@ final class Character extends DiscordPart implements \JsonSerializable
     {
         if (is_string($value)) {
             try {
-                $this->attributes['updated_at'] = new \DateTimeImmutable($value);
+                $this->attributes['updated_at'] = new \Carbon\Carbon($value);
 
                 return;
             } catch (\Throwable $e) {

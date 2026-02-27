@@ -20,8 +20,8 @@ use Firebase\JWT\SignatureInvalidException;
 
 class TokenService
 {
-    private string $secret;
-    private string $algo;
+    protected string $secret;
+    protected string $algo;
 
     public function __construct(string $secret, string $algo = 'HS256')
     {

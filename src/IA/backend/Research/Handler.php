@@ -18,7 +18,7 @@ use React\Promise\PromiseInterface;
 
 class Handler
 {
-    private Service $service;
+    protected Service $service;
 
     public function __construct(Service $service)
     {

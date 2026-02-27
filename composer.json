@@ -28,7 +28,8 @@
     "prefer-stable": true,
     "config": {
         "allow-plugins": {
-            "wyrihaximus/composer-update-bin-autoload-path": true
+            "wyrihaximus/composer-update-bin-autoload-path": true,
+            "pestphp/pest-plugin": true
         }
     },
     "autoload": {

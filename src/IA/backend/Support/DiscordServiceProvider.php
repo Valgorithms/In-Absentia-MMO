@@ -22,7 +22,8 @@ final class DiscordServiceProvider extends ServiceProvider
     {
         // discord client
         $container->set('discord', function ($c) {
-            $cfg = $c->get('config')['discord'] ?? [];
+            $cfgAll = $c->get('config') ?? [];
+            $cfg = is_array($cfgAll) ? ($cfgAll['discord'] ?? []) : [];
             $options = [
                 'token' => $cfg['token'] ?? '',
                 'loop' => $c->get('loop'),
@@ -34,12 +35,19 @@ final class DiscordServiceProvider extends ServiceProvider
 
         // discord factory
         $container->set('discord.factory', function ($c) {
-            return new DiscordFactory($c->get('discord'));
+            $discord = $c->get('discord');
+            if ($discord === null) {
+                return null;
+            }
+
+            return new DiscordFactory($discord);
         });
 
         // Eagerly bind our PartFactory to use the Discord factory so parts created
         // through PartFactory will use the Discord client where appropriate.
         $factory = $container->get('discord.factory');
-        \BackendPhp\Support\PartFactory::setDiscordFactory($factory);
+        if ($factory !== null) {
+            \BackendPhp\Support\PartFactory::setDiscordFactory($factory);
+        }
     }
 }

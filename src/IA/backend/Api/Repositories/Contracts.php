@@ -9,8 +9,13 @@ use BackendPhp\Api\AbstractRepository;
 
 final class Contracts extends AbstractRepository
 {
-    public function create(array $data): array
+    public function save(array $data): array
     {
+        if (! empty($data[$this->discrim])) {
+            $path = $this->bindPath(Endpoint::CONTRACT, [$this->discrim => $data[$this->discrim]]);
+            return $this->request('PATCH', $path, $data);
+        }
+
         return $this->request('POST', Endpoint::CONTRACTS, $data);
     }
 
@@ -80,10 +85,7 @@ final class Contracts extends AbstractRepository
         return $this->request('GET', $path);
     }
 
-    public function save(array $data): array
-    {
-        return $this->create($data);
-    }
+    
 
     public function update(string $id, array $data): array
     {

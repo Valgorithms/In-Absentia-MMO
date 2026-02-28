@@ -21,8 +21,13 @@ final class Characters extends AbstractRepository
         return $this->request('GET', $path);
     }
 
-    public function create(array $data): array
+    public function save(array $data): array
     {
+        if (! empty($data[$this->discrim])) {
+            $path = $this->bindPath(Endpoint::CHARACTER, [$this->discrim => $data[$this->discrim]]);
+            return $this->request('PATCH', $path, $data);
+        }
+
         return $this->request('POST', Endpoint::CHARACTERS, $data);
     }
 
@@ -86,10 +91,7 @@ final class Characters extends AbstractRepository
         return $this->request('GET', $path);
     }
 
-    public function save(array $data): array
-    {
-        return $this->create($data);
-    }
+    
 
     public function update(string $id, array $data): array
     {

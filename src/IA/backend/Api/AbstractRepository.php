@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is a part of the In Absentia project.
+ *
+ * Copyright (c) 2026-present Valithor Obsidion <valithor@discordphp.org>
+ *
+ * This file is subject to the MIT license that is bundled
+ * with this source code in the LICENSE.md file.
+ */
+
 namespace BackendPhp\Api;
 
 use BackendPhp\Support\Container;
@@ -119,6 +128,7 @@ abstract class AbstractRepository extends Collection implements RepositoryInterf
         if ($body !== null) {
             $req['body'] = $body;
         }
+
         return $req;
     }
 
@@ -128,7 +138,7 @@ abstract class AbstractRepository extends Collection implements RepositoryInterf
             return $path;
         }
 
-        return $path . '?' . http_build_query($params);
+        return $path.'?'.http_build_query($params);
     }
 
     public function getClient()
@@ -138,7 +148,7 @@ abstract class AbstractRepository extends Collection implements RepositoryInterf
 
     /**
      * Bind placeholder tokens in an endpoint template.
-     * Example: bindPath('/items/:id', ['id' => 123]) => '/items/123'
+     * Example: bindPath('/items/:id', ['id' => 123]) => '/items/123'.
      */
     protected function bindPath(string $template, array $params = []): string
     {
@@ -165,7 +175,7 @@ abstract class AbstractRepository extends Collection implements RepositoryInterf
         // Fallback: simple placeholder replacement
         $path = $template;
         foreach ($params as $key => $value) {
-            $path = str_replace(':' . $key, urlencode((string) $value), $path);
+            $path = str_replace(':'.$key, urlencode((string) $value), $path);
         }
 
         return $path;

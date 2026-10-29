@@ -25,6 +25,7 @@
     },
     "scripts": {
         "cs": ["./vendor/bin/php-cs-fixer fix"],
+        "cs-check": ["./vendor/bin/php-cs-fixer fix --dry-run --using-cache=no"],
         "unit": ["./vendor/bin/pest"]
     },
     "minimum-stability": "dev",

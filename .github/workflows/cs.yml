@@ -6,7 +6,7 @@ on:
 
 jobs:
   cs:
-    name: Run composer cs
+    name: Check style and test committed source
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
-      - name: Run CS script
-        run: composer run-script cs
+      - name: Check code style without modifying source
+        run: composer run-script cs-check
 
       - name: Run unit tests
         run: composer run-script unit

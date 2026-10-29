@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace BackendPhp\Auth;
 
 use Psr\Http\Message\ServerRequestInterface;
+use React\Http\Message\Response;
 
 class Middleware
 {
@@ -27,14 +28,19 @@ class Middleware
     public function handle(ServerRequestInterface $request, callable $next)
     {
         $auth = $request->getHeaderLine('Authorization');
-        if ($auth && preg_match('/^Bearer\s+(.*)$/', $auth, $m)) {
+        if (preg_match('/^Bearer\s+(\S+)$/i', $auth, $m)) {
             $token = $m[1];
             $payload = $this->tokens->verifyToken($token);
-            if ($payload) {
+            if ($payload !== null
+                && is_string($payload['sub'] ?? null)
+                && $payload['sub'] !== ''
+                && is_int($payload['exp'] ?? null)
+                && $payload['exp'] > time()
+            ) {
                 return $next($request->withAttribute('auth', $payload));
             }
         }
 
-        return [401, ['Content-Type' => 'application/json'], json_encode(['error' => 'Unauthorized'])];
+        return Response::json(['error' => 'Unauthorized'])->withStatus(401);
     }
 }

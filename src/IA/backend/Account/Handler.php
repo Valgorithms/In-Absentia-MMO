@@ -27,6 +27,8 @@ class Handler
 
     public function getAccount(ServerRequestInterface $request): PromiseInterface
     {
-        return $this->service->getAccount($request->getAttribute('auth') ?? null);
+        $auth = $request->getAttribute('auth');
+
+        return $this->service->getAccount(is_array($auth) ? $auth : null);
     }
 }

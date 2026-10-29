@@ -14,16 +14,17 @@ declare(strict_types=1);
 namespace BackendPhp\Auth;
 
 use Psr\Http\Message\ServerRequestInterface;
+use React\Http\Message\Response;
 
 class Handler
 {
-    public function login(ServerRequestInterface $request)
+    public function login(ServerRequestInterface $request): Response
     {
-        return ['token' => 'DEV-TOKEN'];
+        return Response::json(['error' => 'Login is not implemented'])->withStatus(501);
     }
 
-    public function register(ServerRequestInterface $request)
+    public function register(ServerRequestInterface $request): Response
     {
-        return ['status' => 'ok'];
+        return Response::json(['error' => 'Registration is not implemented'])->withStatus(501);
     }
 }

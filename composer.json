@@ -12,7 +12,7 @@
         "team-reflex/discord-php": "^10.45.22",
         "monolog/monolog": "^3.0",
         "sharkk/router": "*",
-        "firebase/php-jwt": "^6.8"
+        "firebase/php-jwt": "^7.0"
     },
     "require-dev": {
         "symfony/var-dumper": "*",

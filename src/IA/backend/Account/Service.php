@@ -27,6 +27,10 @@ class Service
 
     public function getAccount(?array $auth): PromiseInterface
     {
+        if (! is_string($auth['sub'] ?? null) || $auth['sub'] === '') {
+            return resolve(null);
+        }
+
         // Return account object for authenticated user
         $res = ['id' => $auth['sub'] ?? null, 'banked' => 0];
 

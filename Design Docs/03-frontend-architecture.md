@@ -292,11 +292,11 @@ export const governance = {
 type EventHandler = (data: any) => void
 
 class WebSocketManager {
-	private ws: WebSocket | null = null
-	private handlers: Map<string, Set<EventHandler>> = new Map()
-	private subscriptions: Set<string> = new Set()
-	private reconnectTimer: number | null = null
-	private url: string
+	protected ws: WebSocket | null = null
+	protected handlers: Map<string, Set<EventHandler>> = new Map()
+	protected subscriptions: Set<string> = new Set()
+	protected reconnectTimer: number | null = null
+	protected url: string
 
 	constructor(url: string) {
 		this.url = url
@@ -345,7 +345,7 @@ class WebSocketManager {
 		return () => this.handlers.get(eventType)?.delete(handler)
 	}
 
-	private scheduleReconnect(token: string) {
+	protected scheduleReconnect(token: string) {
 		if (this.reconnectTimer) return
 		this.reconnectTimer = setTimeout(() => {
 			this.reconnectTimer = null

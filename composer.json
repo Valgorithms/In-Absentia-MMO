@@ -7,9 +7,18 @@
             "email": "valithor@discordphp.org"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Valgorithms/sharkk-router"
+        }
+    ],
     "require": {
-        "php": "^8.2.0",
-        "team-reflex/discord-php": "^10.45.22"
+        "php": "^8.3.0",
+        "team-reflex/discord-php": "^10.45.22",
+        "monolog/monolog": "^3.0",
+        "sharkk/router": "dev-master#2e6c969cb2ffb23c4a042a3d703939849ee73789",
+        "firebase/php-jwt": "^7.0"
     },
     "require-dev": {
         "symfony/var-dumper": "*",
@@ -22,7 +31,8 @@
     },
     "scripts": {
         "cs": ["./vendor/bin/php-cs-fixer fix"],
-        "unit": ["./vendor/bin/phpunit"]
+        "cs-check": ["./vendor/bin/php-cs-fixer fix --dry-run --using-cache=no"],
+        "unit": ["./vendor/bin/pest"]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -34,7 +44,8 @@
     },
     "autoload": {
         "psr-4": {
-            "IA\\": "src/IA/"
+            "IA\\": "src/IA/",
+            "BackendPhp\\": "src/IA/backend/"
         }
     }
 }

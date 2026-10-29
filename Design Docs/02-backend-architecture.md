@@ -1024,35 +1024,34 @@ backend-php/
 │   └── server.php
 ├── src/
 │   ├── Server/
-│   │   ├── HttpServer.php
-│   │   ├── WebSocketServer.php
-│   │   └── Router.php
+│   │   ├── Http.php
+│   │   ├── WebSocket.php
 │   ├── Auth/
-│   │   ├── AuthHandler.php
+│   │   ├── Handler.php
 │   │   ├── TokenService.php
-│   │   └── AuthMiddleware.php
+│   │   └── Middleware.php
 │   ├── Account/
-│   │   ├── AccountHandler.php
-│   │   ├── AccountService.php
-│   │   └── AccountRepository.php
+│   │   ├── Handler.php
+│   │   ├── Service.php
+│   │   └── Repository.php
 │   ├── Character/
-│   │   ├── CharacterHandler.php
-│   │   ├── CharacterService.php
-│   │   └── CharacterRepository.php
+│   │   ├── Handler.php
+│   │   ├── Service.php
+│   │   └── Repository.php
 │   ├── Contract/
-│   │   ├── ContractHandler.php
-│   │   ├── ContractService.php
-│   │   ├── ContractRepository.php
-│   │   ├── ContractResolver.php
-│   │   └── ContractTypes.php
+│   │   ├── Handler.php
+│   │   ├── Service.php
+│   │   ├── Repository.php
+│   │   ├── Resolver.php
+│   │   └── Types.php
 │   ├── Research/
-│   │   ├── ResearchHandler.php
-│   │   ├── ResearchService.php
+│   │   ├── Handler.php
+│   │   ├── Service.php
 │   │   ├── TrialService.php
-│   │   └── ResearchRepository.php
+│   │   └── Repository.php
 │   ├── World/
-│   │   ├── WorldHandler.php
-│   │   ├── WorldTicker.php
+│   │   ├── Handler.php
+│   │   ├── Ticker.php
 │   │   ├── ZoneService.php
 │   │   ├── BuildingService.php
 │   │   └── ManaService.php
@@ -1060,15 +1059,15 @@ backend-php/
 │   │   ├── MarketHandler.php
 │   │   └── MarketService.php
 │   ├── Governance/
-│   │   ├── GovernanceHandler.php
+│   │   ├── Handler.php
 │   │   ├── ElectionService.php
 │   │   └── PolicyService.php
 │   ├── Raid/
-│   │   ├── RaidScheduler.php
-│   │   ├── RaidExecutor.php
-│   │   └── RaidScaling.php
+│   │   ├── Scheduler.php
+│   │   ├── Executor.php
+│   │   └── Scaling.php
 │   ├── Skill/
-│   │   └── SkillCalculator.php
+│   │   └── Calculator.php
 │   └── Database/
 │       ├── ConnectionPool.php
 │       └── TransactionHelper.php

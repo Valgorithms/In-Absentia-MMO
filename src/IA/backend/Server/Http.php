@@ -20,6 +20,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use React\EventLoop\Loop;
 use Sharkk\Router\Router as SharkkRouter;
 use React\Http\Message\Response;
+use React\Socket\ServerInterface;
 
 class Http
 {
@@ -52,7 +53,12 @@ class Http
                 return Response::json(['error' => $match['code'] === 405 ? 'Method not allowed' : 'Not found'])->withStatus($match['code']);
             }
 
-            return ($match['handler'])(...$match['params']);
+            $handler = $match['handler'];
+            if ($handler instanceof RequestHandlerAdapter) {
+                return $handler($request, ...$match['params']);
+            }
+
+            return $handler(...$match['params']);
         }
 
         return $this->router->dispatch($request);
@@ -61,6 +67,11 @@ class Http
     public function listen(string $host, int $port): void
     {
         $this->socket = new TcpServer("{$host}:{$port}", $this->loop);
-        $this->server->listen($this->socket);
+        $this->listenOn($this->socket);
+    }
+
+    public function listenOn(ServerInterface $socket): void
+    {
+        $this->server->listen($socket);
     }
 }

@@ -10,14 +10,11 @@
  */
 
 use BackendPhp\Contract\Repository;
+use function React\Async\await;
 
 test('contract creation assigns a server id and preserves other input', function () {
-    $resolved = false;
-    (new Repository())->create(['id' => 'client-id', 'type' => 'research'])->then(function ($result) use (&$resolved) {
-        $resolved = true;
-        expect($result['id'])->toMatch('/^[a-f0-9]{16}$/');
-        expect($result['id'])->not->toBe('client-id');
-        expect($result['type'])->toBe('research');
-    });
-    expect($resolved)->toBeTrue();
+    $result = await((new Repository())->create(['id' => 'client-id', 'type' => 'research']));
+    expect($result['id'])->toMatch('/^[a-f0-9]{16}$/');
+    expect($result['id'])->not->toBe('client-id');
+    expect($result['type'])->toBe('research');
 });

@@ -20,6 +20,7 @@ use BackendPhp\Research\Repository as ResearchRepository;
 use BackendPhp\Research\Service as ResearchService;
 use React\Http\Message\Response;
 use React\Http\Message\ServerRequest;
+use function React\Async\await;
 
 test('JSON handlers reject malformed and scalar bodies with 400 responses', function () {
     $handlers = [
@@ -28,14 +29,10 @@ test('JSON handlers reject malformed and scalar bodies with 400 responses', func
     ];
     foreach ($handlers as [$handler, $method]) {
         foreach (['', '{', 'null', 'true', '123', '"text"'] as $body) {
-            $resolved = false;
             $request = new ServerRequest('POST', 'http://localhost/', [], $body);
-            $handler->$method($request)->then(function ($response) use (&$resolved) {
-                $resolved = true;
-                expect($response)->toBeInstanceOf(Response::class);
-                expect($response->getStatusCode())->toBe(400);
-            });
-            expect($resolved)->toBeTrue();
+            $response = await($handler->$method($request));
+            expect($response)->toBeInstanceOf(Response::class);
+            expect($response->getStatusCode())->toBe(400);
         }
     }
 });
@@ -47,12 +44,8 @@ test('JSON handlers preserve valid array and object bodies', function () {
     ];
     foreach ($handlers as [$handler, $method, $field]) {
         foreach (['{}', '[]', '{"type":"research"}', '[1,2]'] as $body) {
-            $resolved = false;
-            $handler->$method(new ServerRequest('POST', 'http://localhost/', [], $body))->then(function ($result) use (&$resolved, $body, $field) {
-                $resolved = true;
-                expect($result[$field])->toBe(json_decode($body, true));
-            });
-            expect($resolved)->toBeTrue();
+            $result = await($handler->$method(new ServerRequest('POST', 'http://localhost/', [], $body)));
+            expect($result[$field])->toBe(json_decode($body, true));
         }
     }
 });
@@ -60,15 +53,9 @@ test('JSON handlers preserve valid array and object bodies', function () {
 test('character handler validates route identity without coercion', function () {
     $handler = new CharacterHandler(new CharacterService(new CharacterRepository()));
     foreach ([null, '', 1, [], false] as $id) {
-        $resolved = false;
         $request = (new ServerRequest('GET', 'http://localhost/'))->withAttribute('character_id', $id);
-        $handler->getStats($request)->then(function ($response) use (&$resolved) {
-            $resolved = true;
-            expect($response->getStatusCode())->toBe(400);
-        });
-        expect($resolved)->toBeTrue();
+        expect(await($handler->getStats($request))->getStatusCode())->toBe(400);
     }
-    $handler->getStats((new ServerRequest('GET', 'http://localhost/'))->withAttribute('character_id', 'char-0'))->then(function ($result) {
-        expect($result['id'])->toBe('char-0');
-    });
+    $result = await($handler->getStats((new ServerRequest('GET', 'http://localhost/'))->withAttribute('character_id', 'char-0')));
+    expect($result['id'])->toBe('char-0');
 });

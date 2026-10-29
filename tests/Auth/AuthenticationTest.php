@@ -15,6 +15,7 @@ use BackendPhp\Auth\TokenService;
 use Firebase\JWT\JWT;
 use React\Http\Message\Response;
 use React\Http\Message\ServerRequest;
+use function React\Async\await;
 
 test('authentication rejects invalid bearer tokens without invoking downstream code', function () {
     $key = str_repeat('fixture-only-', 4);
@@ -82,17 +83,10 @@ test('account access fails closed for missing or malformed identities', function
     $service = new \BackendPhp\Account\Service(new \BackendPhp\Account\Repository());
     $handler = new \BackendPhp\Account\Handler($service);
     foreach ([null, [], ['sub' => ''], ['sub' => ['a']], 'unverified'] as $auth) {
-        $resolved = false;
         $request = (new ServerRequest('GET', 'http://localhost/account'))->withAttribute('auth', $auth);
-        $handler->getAccount($request)->then(function ($account) use (&$resolved) {
-            $resolved = true;
-            expect($account)->toBeNull();
-        });
-        expect($resolved)->toBeTrue();
+        expect(await($handler->getAccount($request)))->toBeNull();
     }
-    $service->getAccount(['sub' => 'account-0'])->then(function ($account) {
-        expect($account['id'])->toBe('account-0');
-    });
+    expect(await($service->getAccount(['sub' => 'account-0']))['id'])->toBe('account-0');
 });
 
 test('token creation rejects weak signing keys and invalid JSON claims', function () {

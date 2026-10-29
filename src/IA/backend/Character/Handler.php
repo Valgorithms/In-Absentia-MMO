@@ -15,6 +15,8 @@ namespace BackendPhp\Character;
 
 use Psr\Http\Message\ServerRequestInterface;
 use React\Promise\PromiseInterface;
+use React\Http\Message\Response;
+use function React\Promise\resolve;
 
 class Handler
 {
@@ -28,6 +30,9 @@ class Handler
     public function getStats(ServerRequestInterface $request): PromiseInterface
     {
         $id = $request->getAttribute('character_id');
+        if (! is_string($id) || $id === '') {
+            return resolve(Response::json(['error' => 'Invalid character identity'])->withStatus(400));
+        }
 
         return $this->service->getStats($id);
     }

@@ -15,6 +15,8 @@ namespace BackendPhp\Research;
 
 use Psr\Http\Message\ServerRequestInterface;
 use React\Promise\PromiseInterface;
+use React\Http\Message\Response;
+use function React\Promise\resolve;
 
 class Handler
 {
@@ -27,6 +29,11 @@ class Handler
 
     public function trial(ServerRequestInterface $request): PromiseInterface
     {
-        return $this->service->trial(json_decode((string) $request->getBody(), true));
+        $data = json_decode((string) $request->getBody(), true);
+        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($data)) {
+            return resolve(Response::json(['error' => 'Invalid JSON body'])->withStatus(400));
+        }
+
+        return $this->service->trial($data);
     }
 }

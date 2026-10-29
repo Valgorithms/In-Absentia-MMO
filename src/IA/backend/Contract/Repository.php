@@ -21,6 +21,8 @@ class Repository
     public function create(array $payload): PromiseInterface
     {
         // In a real async implementation this would perform an async DB insert.
-        return resolve($payload + ['id' => bin2hex(random_bytes(8))]);
+        $payload['id'] = bin2hex(random_bytes(8));
+
+        return resolve($payload);
     }
 }

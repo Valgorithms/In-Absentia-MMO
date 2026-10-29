@@ -59,7 +59,9 @@ final class Character extends DiscordPart implements \JsonSerializable
     {
         $out = [];
         foreach ($this->getRawAttributes() as $k => $v) {
-            if ($v instanceof DiscordPart) {
+            if ($v instanceof \DateTimeInterface) {
+                $out[$k] = $v->format(\DateTimeInterface::ATOM);
+            } elseif ($v instanceof DiscordPart) {
                 $out[$k] = $v->jsonSerialize();
             } elseif (is_array($v)) {
                 $out[$k] = array_map(fn ($x) => $x instanceof DiscordPart ? $x->jsonSerialize() : $x, $v);
@@ -73,7 +75,7 @@ final class Character extends DiscordPart implements \JsonSerializable
 
     public function __set(string $name, $value): void
     {
-        $this->attributes[$name] = $value;
+        parent::__set($name, $value);
     }
 
     public function __isset(string $name): bool
@@ -88,8 +90,8 @@ final class Character extends DiscordPart implements \JsonSerializable
                 $this->attributes['created_at'] = new \Carbon\Carbon($value);
 
                 return;
-            } catch (\Throwable $e) {
-                // fallthrough
+            } catch (\Exception $e) {
+                throw new \InvalidArgumentException('Invalid created_at timestamp', 0, $e);
             }
         }
 
@@ -103,8 +105,8 @@ final class Character extends DiscordPart implements \JsonSerializable
                 $this->attributes['updated_at'] = new \Carbon\Carbon($value);
 
                 return;
-            } catch (\Throwable $e) {
-                // fallthrough
+            } catch (\Exception $e) {
+                throw new \InvalidArgumentException('Invalid updated_at timestamp', 0, $e);
             }
         }
 

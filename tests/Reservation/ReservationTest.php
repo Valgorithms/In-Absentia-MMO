@@ -25,3 +25,14 @@ test('reservation fails when insufficient', function () {
     Assert::assertFalse($ok);
     Assert::assertEquals(2, $svc->available('iron_ingot'));
 });
+
+test('invalid releases cannot consume inventory', function () {
+    $svc = new ReservationService(['iron_ingot' => 5]);
+    foreach ([0, -2] as $quantity) {
+        expect(fn () => $svc->release('iron_ingot', $quantity))->toThrow(InvalidArgumentException::class);
+        expect($svc->available('iron_ingot'))->toBe(5);
+    }
+    expect($svc->reserve('iron_ingot', 3))->toBeTrue();
+    $svc->release('iron_ingot', 3);
+    expect($svc->available('iron_ingot'))->toBe(5);
+});

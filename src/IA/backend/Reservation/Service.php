@@ -52,6 +52,10 @@ final class Service
 
     public function release(string $itemType, int $quantity): void
     {
+        if ($quantity <= 0) {
+            throw new \InvalidArgumentException('Release quantity must be positive');
+        }
+
         $this->inventory[$itemType] = $this->available($itemType) + $quantity;
     }
 }

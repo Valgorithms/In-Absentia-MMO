@@ -40,14 +40,7 @@ class ConnectionPool
                 $pass = null;
             }
             $opts = [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
-            // Try DSN-only construction first (works for sqlite and many drivers),
-            // fall back to DSN+credentials+options if that fails.
-            try {
-                $this->pool['default'] = new \PDO($dsn);
-                $this->pool['default']->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            } catch (\PDOException $e) {
-                $this->pool['default'] = new \PDO($dsn, $user, $pass, $opts);
-            }
+            $this->pool['default'] = new \PDO($dsn, $user, $pass, $opts);
         }
 
         return $this->pool['default'];

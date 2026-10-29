@@ -38,8 +38,14 @@ test('JSON handlers reject malformed and scalar bodies with 400 responses', func
 });
 
 test('JSON handlers preserve valid array and object bodies', function () {
+    $contractService = new class(new ContractRepository()) extends ContractService {
+        public function create(array $data): \React\Promise\PromiseInterface
+        {
+            return \React\Promise\resolve(['data' => $data]);
+        }
+    };
     $handlers = [
-        [new ContractHandler(new ContractService(new ContractRepository())), 'create', 'data'],
+        [new ContractHandler($contractService), 'create', 'data'],
         [new ResearchHandler(new ResearchService(new ResearchRepository())), 'trial', 'params'],
     ];
     foreach ($handlers as [$handler, $method, $field]) {

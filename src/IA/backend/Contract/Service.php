@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace BackendPhp\Contract;
 
 use React\Promise\PromiseInterface;
-use function React\Promise\resolve;
+use function React\Promise\reject;
 
 class Service
 {
@@ -26,13 +26,10 @@ class Service
     }
 
     /**
-     * Create a contract — returns a Promise resolving to the created data.
+     * Contract creation remains unsupported until persistence and reservations exist.
      */
     public function create(array $data): PromiseInterface
     {
-        // Validate and reserve resources using repo (sync here)
-        $result = ['status' => 'created', 'data' => $data];
-
-        return resolve($result);
+        return reject(new \BadMethodCallException('Contract creation is not implemented'));
     }
 }

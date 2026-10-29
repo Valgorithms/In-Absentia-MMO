@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is a part of the In Absentia project.
+ *
+ * Copyright (c) 2026-present Valithor Obsidion <valithor@discordphp.org>
+ *
+ * This file is subject to the MIT license that is bundled
+ * with this source code in the LICENSE.md file.
+ */
+
 namespace BackendPhp\Api\Repositories;
 
 use BackendPhp\Api\Endpoint;
@@ -12,12 +21,14 @@ final class Characters extends AbstractRepository
     public function list(array $params = []): array
     {
         $path = $this->withQuery(Endpoint::CHARACTERS, $params);
+
         return $this->request('GET', $path);
     }
 
     public function fetch(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
 
@@ -25,6 +36,7 @@ final class Characters extends AbstractRepository
     {
         if (! empty($data[$this->discrim])) {
             $path = $this->bindPath(Endpoint::CHARACTER, [$this->discrim => $data[$this->discrim]]);
+
             return $this->request('PATCH', $path, $data);
         }
 
@@ -34,24 +46,28 @@ final class Characters extends AbstractRepository
     public function retire(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER, ['id' => $id]);
+
         return $this->request('DELETE', $path);
     }
 
     public function stats(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER_STATS, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
 
     public function expertise(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER_EXPERTISE, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
 
     public function knowledge(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER_KNOWLEDGE, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
 
@@ -61,18 +77,21 @@ final class Characters extends AbstractRepository
         if ($type !== null) {
             $path = $this->withQuery($path, ['type' => $type]);
         }
+
         return $this->request('GET', $path);
     }
 
     public function contracts(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER_CONTRACTS, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
 
     public function wallet(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER_WALLET, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
 
@@ -80,18 +99,18 @@ final class Characters extends AbstractRepository
     {
         $path = $this->bindPath(Endpoint::CHARACTER_RESEARCH_JOURNAL, ['id' => $id]);
         if ($knowledgeId !== null) {
-            $path .= '/' . $knowledgeId;
+            $path .= '/'.$knowledgeId;
         }
+
         return $this->request('GET', $path);
     }
 
     public function researchDiscoveries(string $id): array
     {
         $path = $this->bindPath(Endpoint::CHARACTER_RESEARCH_DISCOVERIES, ['id' => $id]);
+
         return $this->request('GET', $path);
     }
-
-    
 
     public function update(string $id, array $data): array
     {
@@ -102,7 +121,6 @@ final class Characters extends AbstractRepository
 
     public function delete(string $id): bool
     {
-        $this->retire($id);
-        return true;
+        throw new \BadMethodCallException('Character deletion is not implemented; retire() only describes a request');
     }
 }

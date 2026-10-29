@@ -11,7 +11,7 @@ declare(strict_types=1);
  * with this source code in the LICENSE.md file.
  */
 
-require __DIR__.'/../../../vendor/autoload.php';
+require __DIR__.'/../../../../vendor/autoload.php';
 
 use BackendPhp\Server\Http;
 use BackendPhp\Server\WebSocket;
@@ -36,18 +36,38 @@ $container->set('config', fn ($c) => [
 (new DiscordServiceProvider())->register($container);
 
 // Ensure container exposes an HTTP service and a generic `factory` alias
-$container->set('http', function ($c) { return new Http($c->get('loop')); });
-$container->set('factory', function ($c) { return $c->get('part.factory'); });
+$container->set('http', function ($c) {
+    return new Http($c->get('loop'));
+});
+$container->set('factory', function ($c) {
+    return $c->get('part.factory');
+});
 
 // Register API repositories in the container (factory bindings)
-$container->set('repositories.auth', function ($c) { return new \BackendPhp\Api\Repositories\Auth($c); });
-$container->set('repositories.account', function ($c) { return new \BackendPhp\Api\Repositories\Accounts($c); });
-$container->set('repositories.character', function ($c) { return new \BackendPhp\Api\Repositories\Characters($c); });
-$container->set('repositories.contract', function ($c) { return new \BackendPhp\Api\Repositories\Contracts($c); });
-$container->set('repositories.knowledge', function ($c) { return new \BackendPhp\Api\Repositories\Knowledge($c); });
-$container->set('repositories.world', function ($c) { return new \BackendPhp\Api\Repositories\World($c); });
-$container->set('repositories.market', function ($c) { return new \BackendPhp\Api\Repositories\Market($c); });
-$container->set('repositories.governance', function ($c) { return new \BackendPhp\Api\Repositories\Governance($c); });
+$container->set('repositories.auth', function ($c) {
+    return new \BackendPhp\Api\Repositories\Auth($c);
+});
+$container->set('repositories.account', function ($c) {
+    return new \BackendPhp\Api\Repositories\Accounts($c);
+});
+$container->set('repositories.character', function ($c) {
+    return new \BackendPhp\Api\Repositories\Characters($c);
+});
+$container->set('repositories.contract', function ($c) {
+    return new \BackendPhp\Api\Repositories\Contracts($c);
+});
+$container->set('repositories.knowledge', function ($c) {
+    return new \BackendPhp\Api\Repositories\Knowledge($c);
+});
+$container->set('repositories.world', function ($c) {
+    return new \BackendPhp\Api\Repositories\World($c);
+});
+$container->set('repositories.market', function ($c) {
+    return new \BackendPhp\Api\Repositories\Market($c);
+});
+$container->set('repositories.governance', function ($c) {
+    return new \BackendPhp\Api\Repositories\Governance($c);
+});
 
 // Start servers
 $http = new Http($loop);

@@ -19,6 +19,7 @@ use React\Http\HttpServer as ReactHttpServer;
 use Psr\Http\Message\ServerRequestInterface;
 use React\EventLoop\Loop;
 use Sharkk\Router\Router as SharkkRouter;
+use React\Http\Message\Response;
 
 class Http
 {
@@ -39,8 +40,22 @@ class Http
         }
 
         $this->server = new ReactHttpServer(function (ServerRequestInterface $request) {
-            return $this->router->dispatch($request);
+            return $this->handle($request);
         });
+    }
+
+    public function handle(ServerRequestInterface $request)
+    {
+        if ($this->router instanceof SharkkRouter) {
+            $match = $this->router->lookup($request->getMethod(), $request->getUri()->getPath());
+            if ($match['code'] !== 200) {
+                return Response::json(['error' => $match['code'] === 405 ? 'Method not allowed' : 'Not found'])->withStatus($match['code']);
+            }
+
+            return ($match['handler'])(...$match['params']);
+        }
+
+        return $this->router->dispatch($request);
     }
 
     public function listen(string $host, int $port): void

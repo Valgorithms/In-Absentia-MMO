@@ -11,7 +11,7 @@
         "php": "^8.3.0",
         "team-reflex/discord-php": "^10.45.22",
         "monolog/monolog": "^3.0",
-        "sharkk/router": "*",
+        "sharkk/router": "dev-master#2e6c969cb2ffb23c4a042a3d703939849ee73789",
         "firebase/php-jwt": "^7.0"
     },
     "require-dev": {

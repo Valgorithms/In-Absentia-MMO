@@ -7,6 +7,12 @@
             "email": "valithor@discordphp.org"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Valgorithms/sharkk-router"
+        }
+    ],
     "require": {
         "php": "^8.3.0",
         "team-reflex/discord-php": "^10.45.22",
